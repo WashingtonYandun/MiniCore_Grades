@@ -1,4 +1,4 @@
-function App() {
+export function App() {
     return (
         <div>
             <div>
@@ -6,20 +6,15 @@ function App() {
                     Start Date:
                 </label>
                 <input type="date" id="dateA" />
-
                 <br />
-
                 <label className="label" htmlFor="dateB">
                     Final Date:
                 </label>
                 <input type="date" id="dateB" />
             </div>
-
             <div>
                 <button>Compute</button>
             </div>
         </div>
     );
 }
-
-export default App;
