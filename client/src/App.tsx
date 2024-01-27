@@ -1,24 +1,22 @@
-import { useState, useEffect } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-
 function App() {
     return (
         <div>
-            <div className="filtros">
-                <label className="label" htmlFor="fechaVenta">
-                    Fecha de Venta:
+            <div>
+                <label className="label" htmlFor="dateA">
+                    Start Date:
                 </label>
-                <input className="fechas" type="date" id="fechaVenta" />
+                <input type="date" id="dateA" />
 
-                <label className="label" htmlFor="fechaFin">
-                    Fecha Final:
+                <br />
+
+                <label className="label" htmlFor="dateB">
+                    Final Date:
                 </label>
-                <input className="fechas" type="date" id="fechaFin" />
+                <input type="date" id="dateB" />
             </div>
 
             <div>
-                <button>Buscar</button>
+                <button>Compute</button>
             </div>
         </div>
     );
