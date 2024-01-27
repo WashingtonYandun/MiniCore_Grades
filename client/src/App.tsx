@@ -6,15 +6,12 @@ function App() {
                     Start Date:
                 </label>
                 <input type="date" id="dateA" />
-
                 <br />
-
                 <label className="label" htmlFor="dateB">
                     Final Date:
                 </label>
                 <input type="date" id="dateB" />
             </div>
-
             <div>
                 <button>Compute</button>
             </div>
