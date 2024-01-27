@@ -1,4 +1,4 @@
-export function App() {
+function App() {
     return (
         <div>
             <div>
@@ -18,3 +18,5 @@ export function App() {
         </div>
     );
 }
+
+export default App;
