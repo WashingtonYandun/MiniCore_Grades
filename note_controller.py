@@ -1,6 +1,5 @@
 from fastapi import HTTPException
 from period import Period
-from datetime import datetime
 from typing import List
 from data import get_notes, get_students, get_student
 

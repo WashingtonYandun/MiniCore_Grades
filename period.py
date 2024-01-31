@@ -1,5 +1,5 @@
 from pydantic import BaseModel, confloat
-from datetime import datetime, timedelta
+from datetime import datetime
 
 
 class Period(BaseModel):
