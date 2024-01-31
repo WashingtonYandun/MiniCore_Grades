@@ -5,8 +5,7 @@ from datetime import datetime
 import uvicorn
 from os import environ
 from period import Period, PeriodRequest
-from note_controller import compute_grades
-from data import get_students
+from note_controller import compute_grades, students_db
 
 app = FastAPI()
 
@@ -43,7 +42,7 @@ def read_student(request: List[PeriodRequest]):
 
 @app.get("/students")
 def read_students():
-    return get_students()
+    return students_db
 
 
 if __name__ == "__main__":
