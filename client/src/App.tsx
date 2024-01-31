@@ -2,21 +2,23 @@ import React, { useState, ChangeEvent, FormEvent } from "react";
 import "./App.css";
 
 interface Input {
-    dateA: string;
-    dateB: string;
-    weight: number;
+    dateA: string | number; // Fix: Allow both string and number values
+    dateB: string | number; // Fix: Allow both string and number values
+    weight: string | number; // Fix: Allow both string and number values
+}
+
+interface StudentData {
+    name: string;
+    grade: number[];
+    p1: number;
+    p2: number;
+    p1_weight: number;
+    p2_weight: number;
+    needed: number;
 }
 
 interface ResponseData {
-    [key: string]: {
-        name: string;
-        grade: number[];
-        p1: number;
-        p2: number;
-        p1_weight: number;
-        p2_weight: number;
-        needed: number;
-    };
+    [studentID: string]: StudentData;
 }
 
 const App: React.FC = () => {
@@ -39,20 +41,27 @@ const App: React.FC = () => {
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
-        // Aquí realizarías la lógica para enviar la request a tu API con los datos de inputs
-        // Puedes usar fetch u otras librerías para realizar la solicitud HTTP
-        // Ejemplo con fetch:
-        const response = await fetch("http://127.0.0.1:8000/compute", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(inputs),
-        });
+        try {
+            const response = await fetch(
+                "https://mini-core-grades-back.vercel.app/compute",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(inputs),
+                }
+            );
 
-        // Manejar la respuesta de la API aquí
-        const data: ResponseData = await response.json();
-        setResponseData(data);
+            if (!response.ok) {
+                throw new Error("Error in API request");
+            }
+
+            const data: ResponseData = await response.json();
+            setResponseData(data);
+        } catch (error) {
+            console.error("Error:", error);
+        }
     };
 
     return (
@@ -69,7 +78,9 @@ const App: React.FC = () => {
                                     type="date"
                                     id={`dateA${index}`}
                                     value={input.dateA}
-                                    onChange={(e) =>
+                                    onChange={(
+                                        e: ChangeEvent<HTMLInputElement>
+                                    ) =>
                                         handleInputChange(
                                             index,
                                             "dateA",
@@ -84,7 +95,9 @@ const App: React.FC = () => {
                                     type="date"
                                     id={`dateB${index}`}
                                     value={input.dateB}
-                                    onChange={(e) =>
+                                    onChange={(
+                                        e: ChangeEvent<HTMLInputElement>
+                                    ) =>
                                         handleInputChange(
                                             index,
                                             "dateB",
@@ -102,7 +115,9 @@ const App: React.FC = () => {
                                     max="1"
                                     step="0.01"
                                     value={input.weight}
-                                    onChange={(e) =>
+                                    onChange={(
+                                        e: ChangeEvent<HTMLInputElement>
+                                    ) =>
                                         handleInputChange(
                                             index,
                                             "weight",

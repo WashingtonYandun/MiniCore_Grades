@@ -11,11 +11,7 @@ def compute_grades(periods: List[Period]):
         if p1.dateA > p1.dateB or p1.dateB > p2.dateA or p2.dateA > p2.dateB:
             raise HTTPException(status_code=400, detail="Invalid date range")
 
-        if p1.weight + p2.weight >= 1:
-            raise HTTPException(status_code=400, detail="Invalid weights")
-
-        
-        if p1.weight + p2.weight >= 1:
+        if p1.weight + p2.weight >= 1 or p1.weight < 0 or p2.weight < 0:
             raise HTTPException(status_code=400, detail="Invalid weights")
         
         notes = get_notes()
@@ -34,6 +30,9 @@ def compute_grades(periods: List[Period]):
         # get the average for each student
         average_p1 = {}
         average_p2 = {}
+
+        if len(notes_p1) == 0 or len(notes_p2) == 0:
+            raise HTTPException(status_code=400, detail="No notes in the specified range")
 
         for note in notes_p1:
             if note.student_id in average_p1:
@@ -77,9 +76,9 @@ def compute_grades(periods: List[Period]):
                 "p1_weight": p1.weight,
                 "p2_weight": p2.weight,
 
-                "needed": 6 - grade[0] if grade[0] < 6 else 0
+                "needed": 6 - grade[0] if grade[0] < 6 else 0,
             }
 
         return final_grades
     except:
-        raise HTTPException(status_code=400, detail="Invalid request")
+        raise HTTPException(status_code=400, detail=f"Invalid request,{periods}")

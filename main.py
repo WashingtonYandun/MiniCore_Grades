@@ -40,7 +40,11 @@ def read_student(request: List[PeriodRequest]):
         return res
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+    
 
+@app.get("/students")
+def read_students():
+    return get_students()
 
 
 if __name__ == "__main__":
