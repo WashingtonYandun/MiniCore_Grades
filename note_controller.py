@@ -2,7 +2,7 @@ from fastapi import HTTPException
 from period import Period
 from datetime import datetime
 from typing import List
-from db import get_students, get_notes, get_student
+from database import get_notes, get_students, get_student
 
 def compute_grades(periods: List[Period]):
     try:
