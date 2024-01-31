@@ -4,13 +4,27 @@ from datetime import datetime, timedelta
 
 class Period(BaseModel):
     """
-    Represents a note for a student's grade.
+    Represents a period of time with start and end dates.
 
     Attributes:
-        student_id (int): The ID of the student.
-        grade (float): The grade received by the student.
-        date (datetime): The date when the grade was recorded.
+        dateA (datetime): The start date of the period.
+        dateB (datetime): The end date of the period.
+        weight (float): The weight of the period, ranging from 0 to 1.
     """
     dateA: datetime
     dateB: datetime
     weight: confloat(ge=0, le=1)
+
+
+class PeriodRequest(BaseModel):
+    """
+    Represents a period request.
+
+    Attributes:
+        dateA (str): The start date of the period.
+        dateB (str): The end date of the period.
+        weight (float): The weight of the period.
+    """
+    dateA: str
+    dateB: str
+    weight: float
