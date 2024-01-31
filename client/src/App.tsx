@@ -43,7 +43,7 @@ const App: React.FC = () => {
 
         try {
             const response = await fetch(
-                "https://mini-core-grades-back.vercel.app/compute",
+                "https://minicore-grades-back.onrender.com/compute",
                 {
                     method: "POST",
                     headers: {
