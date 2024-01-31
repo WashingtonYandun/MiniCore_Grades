@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, confloat
 from datetime import datetime, timedelta
 
 
@@ -13,4 +13,4 @@ class Period(BaseModel):
     """
     dateA: datetime
     dateB: datetime
-    weight: float
+    weight: confloat(ge=0, le=1)

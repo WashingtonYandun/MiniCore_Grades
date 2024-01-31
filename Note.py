@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, confloat
 from datetime import datetime, timedelta
 
 
@@ -12,5 +12,5 @@ class Note(BaseModel):
         date (datetime): The date when the grade was recorded.
     """
     student_id: int
-    grade: float
+    grade: confloat(ge=0, le=10)
     date: datetime
