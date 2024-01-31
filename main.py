@@ -1,12 +1,12 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
+from datetime import datetime
 import uvicorn
 from os import environ
-
 from db import get_students, get_notes, get_student
-from period import Period
-from note_controller import get_grades
+from period import Period, PeriodRequest
+from note_controller import compute_grades
 
 
 app = FastAPI()
@@ -22,19 +22,31 @@ app.add_middleware(
 
 
 @app.post("/compute")
-def read_student(request: List[Period]):
+def read_student(request: List[PeriodRequest]):
     try:
-        p1 = request[0]
-        p2 = request[1]
+        
 
-        res = get_grades(p1, p2)
+        periods = []
+
+        for period_data in request:
+            date_a = datetime.strptime(period_data.dateA, "%Y-%m-%d")
+            date_b = datetime.strptime(period_data.dateB, "%Y-%m-%d")
+
+            period = Period(dateA=date_a, dateB=date_b, weight=period_data.weight)
+            periods.append(period)
+
+        res = compute_grades(periods)
 
         return res
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+    
 
+@app.get("/students")
+def read_students():
+    return get_students()
 
 
 if __name__ == "__main__":
     port = int(environ.get("PORT", 8000))
-    uvicorn.run("main:app", host="127.0.0.1", port=port, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)

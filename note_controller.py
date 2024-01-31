@@ -4,29 +4,15 @@ from datetime import datetime
 from typing import List
 from db import get_students, get_notes, get_student
 
-def get_grades(p1: Period , p2: Period):
+def compute_grades(periods: List[Period]):
     try:
-        p1 = Period(
-            dateA=p1.dateA.date() if isinstance(p1.dateA, datetime) else datetime.strptime(p1.dateA.split("T")[0], "%Y-%m-%d").date(), 
-            dateB=p1.dateB.date() if isinstance(p1.dateB, datetime) else datetime.strptime(p1.dateB.split("T")[0], "%Y-%m-%d").date(), 
-            weight=p1.weight
-        )
-        p2 = Period(
-            dateA=p2.dateA.date() if isinstance(p2.dateA, datetime) else datetime.strptime(p2.dateA.split("T")[0], "%Y-%m-%d").date(), 
-            dateB=p2.dateB.date() if isinstance(p2.dateB, datetime) else datetime.strptime(p2.dateB.split("T")[0], "%Y-%m-%d").date(), 
-            weight=p2.weight
-        )
+        p1, p2 = periods
 
-        if p1.dateA > p1.dateB:
-            raise HTTPException(status_code=400, detail="Invalid dateA")
-        if p1.dateB > p2.dateA:
-            raise HTTPException(status_code=400, detail="Invalid dateB")
-        if p2.dateA > p2.dateB:
-            raise HTTPException(status_code=400, detail="Invalid dateC")
-        
-        if p1.weight + p2.weight >= 1:
+        if p1.dateA > p1.dateB or p1.dateB > p2.dateA or p2.dateA > p2.dateB:
+            raise HTTPException(status_code=400, detail="Invalid date range")
+
+        if p1.weight + p2.weight >= 1 or p1.weight < 0 or p2.weight < 0:
             raise HTTPException(status_code=400, detail="Invalid weights")
-
         
         notes = get_notes()
         students = get_students()
@@ -44,6 +30,9 @@ def get_grades(p1: Period , p2: Period):
         # get the average for each student
         average_p1 = {}
         average_p2 = {}
+
+        if len(notes_p1) == 0 or len(notes_p2) == 0:
+            raise HTTPException(status_code=400, detail="No notes in the specified range")
 
         for note in notes_p1:
             if note.student_id in average_p1:
@@ -74,9 +63,22 @@ def get_grades(p1: Period , p2: Period):
         final_grades = {}
 
         for student_id in average_p1:
-            final_grades[student_id] = [ get_student(student_id).name ,average_p1[student_id] * p1.weight + average_p2[student_id] * p2.weight]
+
+            grade = average_p1[student_id] * p1.weight + average_p2[student_id] * p2.weight,
+
+            final_grades[student_id] = {
+                "name": get_student(student_id).name ,
+                "grade": grade,
+
+                "p1": average_p1[student_id],
+                "p2": average_p2[student_id],
+
+                "p1_weight": p1.weight,
+                "p2_weight": p2.weight,
+
+                "needed": 6 - grade[0] if grade[0] < 6 else 0,
+            }
 
         return final_grades
     except:
-        raise HTTPException(status_code=400, detail="Invalid request")
-    
+        raise HTTPException(status_code=400, detail=f"Invalid request,{periods}")
