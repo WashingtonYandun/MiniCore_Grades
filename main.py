@@ -4,9 +4,9 @@ from typing import List
 from datetime import datetime
 import uvicorn
 from os import environ
-from db import get_students, get_notes, get_student
 from period import Period, PeriodRequest
 from note_controller import compute_grades
+from database import get_students
 
 
 app = FastAPI()
