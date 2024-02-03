@@ -26,6 +26,7 @@ const App: React.FC = () => {
         { dateA: "", dateB: "", weight: 0 },
         { dateA: "", dateB: "", weight: 0 },
     ]);
+
     const [responseData, setResponseData] = useState<ResponseData | null>(null);
 
     const handleInputChange = (
@@ -43,7 +44,7 @@ const App: React.FC = () => {
 
         try {
             const response = await fetch(
-                "https://minicore-grades-back.onrender.com/compute",
+                "https://mini-core-grades-back.vercel.app/compute",
                 {
                     method: "POST",
                     headers: {
@@ -67,6 +68,9 @@ const App: React.FC = () => {
     return (
         <>
             <div className="container">
+                <h1>Compute Grades</h1>
+                <span>By Washington Yandun</span>
+
                 <form className="form" onSubmit={handleSubmit}>
                     <div className="input-center">
                         {inputs.map((input, index) => (
