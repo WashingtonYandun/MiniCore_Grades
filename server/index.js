@@ -2,9 +2,18 @@ import express from 'express';
 import bodyParser from 'body-parser';
 
 
+/**
+ * Express application instance.
+ * @type {import('express').Express}
+ */
 const app = express();
 app.use(bodyParser.json());
 
+
+/**
+ * Represents a student.
+ * @class
+ */
 class Student {
     constructor(id, name) {
         this.id = id;
@@ -12,6 +21,10 @@ class Student {
     }
 }
 
+/**
+ * Represents a note for a student's grade.
+ * @class
+ */
 class Note {
     constructor(student_id, grade, date) {
         this.student_id = student_id;
@@ -20,6 +33,10 @@ class Note {
     }
 }
 
+/**
+ * Represents a period of time with a start date, end date, and weight.
+ * @class
+ */
 class Period {
     constructor(dateA, dateB, weight) {
         this.dateA = new Date(dateA);
@@ -35,6 +52,7 @@ const students_db = [
     new Student(17081, "Galo Hernandez"),
     new Student(17290, "Poli Linker"),
 ];
+
 
 const notes_db = [
     new Note(17072, 10, '2024-01-15'),
@@ -104,10 +122,22 @@ const notes_db = [
 ];
 
 
+/**
+ * Retrieves a student from the database based on their ID.
+ * @param {number} student_id - The ID of the student to retrieve.
+ * @returns {object|undefined} - The student object if found, otherwise undefined.
+ */
 function getStudent(student_id) {
     return students_db.find(student => student.id === student_id);
 }
 
+/**
+ * Computes the grades for each student based on the given periods.
+ * 
+ * @param {Array} periods - An array of period objects containing date ranges and weights.
+ * @returns {Object} - An object containing the final grades for each student.
+ * @throws {Error} - If the date range is invalid or the weights are invalid.
+ */
 function computeGrades(periods) {
     if (periods.some(p => p.dateA > p.dateB)) {
         throw new Error("Invalid date range");
@@ -159,7 +189,11 @@ app.post('/compute', (req, res) => {
 });
 
 app.get('/students', (req, res) => {
-    res.json(students_db);
+    try {
+        res.json(students_db);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
 });
 
 // Init server
