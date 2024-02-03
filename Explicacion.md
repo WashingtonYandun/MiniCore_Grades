@@ -9,5 +9,5 @@ Server
 ```
 cd direc/
 npm init -y
-npm i express body-parser
+npm i express body-parser nodemon
 ```
